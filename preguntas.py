@@ -75,12 +75,13 @@ def pregunta_03():
     # Importe el stemmer de Porter
     # Importe CountVectorizer
     from sklearn.feature_extraction.text import CountVectorizer
+    from nltk.stem.porter import PorterStemmer
 
     # Cree un stemeer que use el algoritmo de Porter.
-    stemmer = ____
+    stemmer = PorterStemmer()
 
     # Cree una instancia del analizador de palabras (build_analyzer)
-    analyzer = ____().____()
+    analyzer = CountVectorizer().build_analyzer()
 
     # Retorne el analizador de palabras
     return lambda x: (stemmer.stem(w) for w in analyzer(x))
