@@ -85,8 +85,7 @@ def pregunta_03():
 
     # Retorne el analizador de palabras
     return lambda x: (stemmer.stem(w) for w in analyzer(x))
-
-
+    
 def pregunta_04():
     """
     Especificación del pipeline y entrenamiento
@@ -98,9 +97,9 @@ def pregunta_04():
     # Importe Pipeline
     # Importe BernoulliNB
     from sklearn.feature_extraction.text import CountVectorizer
-    from sklearn.naive_bayes import BernoulliNB
-    from sklearn.pipeline import Pipeline
     from sklearn.model_selection import GridSearchCV
+    from sklearn.pipeline import Pipeline
+    from sklearn.naive_bayes import BernoulliNB
 
     # Cargue las variables.
     x_train, x_test, y_train, y_test = pregunta_02()
@@ -113,21 +112,21 @@ def pregunta_04():
     # límite superior para la frecuencia de palabras es del 100% y un límite
     # inferior de 5 palabras. Solo deben analizarse palabras conformadas por
     # letras.
-    countVectorizer = countVectorizer(
-        analyzer=analyzer,
+    countVectorizer = CountVectorizer(
+        analyzer= analyzer,
         lowercase=True,
         stop_words="english",
         token_pattern=r"(?u)\b[a-zA-Z][a-zA-Z]+\b",
         binary=True,
-        max_df=1.0, 
+        max_df=1.0,
         min_df=5,
     )
 
     # Cree un pipeline que contenga el CountVectorizer y el modelo de BernoulliNB.
-    pipeline = pipeline(
+    pipeline =Pipeline(
         steps=[
-            ("vect", CountVectorizer),
-            ("classifier",BernoulliNB()),
+            ("vect", countVectorizer),
+            ("classifier", BernoulliNB()),
         ],
     )
 
@@ -135,15 +134,15 @@ def pregunta_04():
     # considerar 10 valores entre 0.1 y 1.0 para el parámetro alpha de
     # BernoulliNB.
     param_grid = {
-         "classifier__alpha": np.arange(0.1, 1.1, 0.1),
+        "classifier__alpha": np.arange(0.1, 1.1, 0.1),
     }
 
     # Defina una instancia de GridSearchCV con el pipeline y el diccionario de
     # parámetros. Use cv = 5, y "accuracy" como métrica de evaluación
     gridSearchCV = GridSearchCV(
-        estimator=pipeline,
-        param_grid=param_grid,
-        cv=5,
+        estimator= pipeline,
+        param_grid= param_grid,
+        cv= 5,
         scoring="accuracy",
         refit=True,
         return_train_score=True,
@@ -151,8 +150,6 @@ def pregunta_04():
 
     # Búsque la mejor combinación de regresores
     gridSearchCV.fit(x_train, y_train)
-
-    # Retorne el mejor modelo
     return gridSearchCV
 
 
@@ -163,13 +160,14 @@ def pregunta_05():
     """
 
     # Importe confusion_matrix
+    # Importe confusion_matrix
     from sklearn.metrics import confusion_matrix
 
     # Obtenga el pipeline de la pregunta 3.
     gridSearchCV = pregunta_04()
 
     # Cargue las variables.
-    X_train, X_test, y_train, y_test = pregunta_02()
+    x_train, x_test, y_train, y_test = pregunta_02()
 
     # Evalúe el pipeline con los datos de entrenamiento usando la matriz de confusion.
     cfm_train = confusion_matrix(
@@ -204,3 +202,4 @@ def pregunta_06():
 
     # Retorne el vector de predicciones
     return y_untagged_pred
+
